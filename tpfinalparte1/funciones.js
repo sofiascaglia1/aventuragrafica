@@ -8,9 +8,15 @@ function mostrarDiario(x, y, w, h) {
 }
 }
 function mostrarBoton(x, y, w, h, texto){
-  fill(66,55,56);         // color de fondo
-  rect(x, y, w, h, 10);   // rectángulo con bordes redondeados
-  fill(219,191,135);      // color del texto
+  if (botonPresionado(x, y, w, h)) {
+    fill(219,191,135);  
+    rect(x, y, w, h, 10);
+    fill(66,55,56);    
+  } else {
+    fill(66,55,56);    
+    rect(x, y, w, h, 10);
+    fill(219,191,135); 
+  }
    textAlign(CENTER, CENTER);
   textSize(15);
   text(texto, x + 10, y + 10, w - 20, h - 20);
