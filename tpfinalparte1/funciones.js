@@ -20,8 +20,7 @@ function mostrarBoton(x, y, w, h, texto){
    textAlign(CENTER, CENTER);
   textSize(15);
   text(texto, x + 10, y + 10, w - 20, h - 20);
- // text(texto, x + w/2, y + h/2);
-  textAlign(LEFT, BASELINE); // vuelve a lo normal para que no moleste
+  textAlign(LEFT, BASELINE); 
 }
 function botonPresionado(x, y, w, h) {
   return mouseX > x && mouseX < x + w && mouseY > y && mouseY < y + h;
@@ -52,4 +51,18 @@ function mostrarLuciernagas(x, y, w, h) {
  fill(219,191,135);
   text(botones[6],50,80);
   }
+}
+function reproducirSB(){
+if (!sonidoBotones.isPlaying()) {
+      sonidoBotones.play();
+      sonidoBotones.setVolume(0.2);
+}
+}
+function reiniciarJuego(){
+  mostrarTextos = true;
+  estado=0
+  sonidoAmbiente.stop();
+  sonidoAmbiente.loop();
+  sonidoAmbiente.setVolume(1);
+  return;
 }
