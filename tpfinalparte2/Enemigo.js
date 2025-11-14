@@ -1,39 +1,40 @@
-class Enemigo {
-  constructor() {
-    this.posX = 550;
-    this.posY = 400;
-    this.miColor = color(0, 255, 0);
-    this.balas = [];
-    this.tiempoDisparo = 0;
-    this.intervalo = 90; // cada 90 frames aprox.
-  }
-
-  dibujar() {
-    fill(this.miColor);
-    ellipse(this.posX, this.posY, 50, 50);
-
-    // Mover y dibujar las balas
-    for (let i = this.balas.length - 1; i >= 0; i--) {
-      let b = this.balas[i];
-      b.mover();
-      b.dibujar();
-
-      // Eliminar si sale de pantalla
-      if (b.fueraDePantalla()) {
-        this.balas.splice(i, 1);
-      }
+class Enemigo{
+  constructor(ojo,x,y,vel){
+  this.ojo = ojo;
+    this.x = x;
+    this.y = y;
+    this.vel = vel;
+    this.balas=[];
+    for (let i = 0; i < 1; i++) {
+      this.balas.push(new Bala(fragmento, this.x, this.y + 40, 5));
     }
-
-    // Disparar cada cierto tiempo
-    this.tiempoDisparo++;
-    if (this.tiempoDisparo > this.intervalo) {
-      this.disparar();
-      this.tiempoDisparo = 0;
-    }
+    this.tiempo = 0;
+    this.indiceBala = 0;
   }
-
+ 
+  
+   dibujar() {
+    image(this.ojo, this.x, this.y, 135, 80);
+    for (let i = 0; i < this.balas.length; i++) {
+    let b = this.balas[i];
+    b.mover();
+    b.dibujar();
+  }
+  }
+  
   disparar() {
-    let nuevaBala = new Bala(this.posX - 25, this.posY);
-    this.balas.push(nuevaBala);
-  }
+    this.tiempo++;
+    if (this.tiempo > 60*2) { 
+      let b = this.balas[this.indiceBala];
+      b.x = this.x;
+      b.y = this.y + 40;
+      this.indiceBala++;
+      if (this.indiceBala >= this.balas.length) {
+        this.indiceBala = 0;
+      }
+      this.tiempo = 0;
+      disparo.play();
+      disparo.setVolume(0.5);
+    }
+}
 }

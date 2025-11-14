@@ -1,51 +1,42 @@
-class Obstaculo {
-  constructor(x, y, ancho, alto, c, tienePagina) {
+class Obstaculos {
+  constructor(x, y, tienePagina) {
     this.x = x;
     this.y = y;
-    this.ancho = ancho;
-    this.alto = alto;
-    this.c = c;
-    this.velocidad = 5;
-
-    this.tienePagina = tienePagina;
+    this.ancho = 100;
+    this.alto = 30;
+    this.vel = 3;
+    this.tienePagina = tienePagina; // true o false
     this.paginaRecolectada = false;
   }
 
   mover() {
-    this.x -= this.velocidad;
-    if (this.x + this.ancho < 0) {
-      this.reaparecer();
+    this.x -= this.vel;
+    if (this.x < -this.ancho) {
+      // cuando sale de pantalla, se puede resetear más adelante si querés
+      this.x = width + random(200, 400);
+      this.y = random(300, 400);
+      this.tienePagina = random() < 0.5; // a veces vuelve con página
+      this.paginaRecolectada = false;
     }
   }
 
-  reaparecer() {
-    this.x = width + random(200, 400);
-    this.y = random(320, 420);
-    this.tienePagina = random() < 0.1;
-    this.paginaRecolectada = false;
+  mostrar() {
+    // dibujo del obstáculo
+     image(imgObstaculo, this.x, this.y, this.ancho, this.alto);
+
+    // si tiene página y no fue recolectada, la dibuja arriba
+    if (this.tienePagina && !this.paginaRecolectada) {
+      image(imgPagina, this.x + this.ancho / 2 - 10, this.y - 25, 20, 30);
+    }
   }
 
-  dibujar() {
-    fill(this.c);
-    rect(this.x, this.y, this.ancho, this.alto);
+  personajeSobre(personaje) {
+    return (personaje.posX + 80 > this.x && personaje.posX < this.x + this.ancho && personaje.posY + 100 >= this.y && personaje.posY + 100 <= this.y + 20 && personaje.velY >= 0);
   }
 
-  dibujarPagina() {
-    fill(255, 255, 0);
-    rect(this.x + this.ancho / 2 - 12, this.y - 35, 25, 25);
-  }
-
-  personajeTocaPagina(personaje) {
-    let pagX = this.x + this.ancho / 2 - 12;
-    let pagY = this.y - 35;
-    let pagAncho = 25;
-    let pagAlto = 25;
-
-    return (
-      personaje.posX < pagX + pagAncho &&
-      personaje.posX + 50 > pagX &&
-      personaje.posY < pagY + pagAlto &&
-      personaje.posY + 50 > pagY
+  colisionPagina(personaje) {
+    if (!this.tienePagina || this.paginaRecolectada) return false;
+    return (personaje.posX + 80 > this.x + this.ancho / 2 - 10 && personaje.posX < this.x + this.ancho / 2 + 10 && personaje.posY + 100 > this.y - 25 && personaje.posY < this.y - 5
     );
   }
 }

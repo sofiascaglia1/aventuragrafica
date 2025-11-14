@@ -1,31 +1,16 @@
-class Bala {
-  constructor(x, y) {
+class Bala{
+  constructor(fragmento, x, y, vel) {
+    this.fragmento = fragmento;
     this.x = x;
     this.y = y;
-    this.velocidad = 6;
-    this.radio = 10;
-    this.miColor = color(0, 0, 255);
+    this.vel= vel;
   }
-
-  mover() {
-    this.x -= this.velocidad;
+  
+ mover() {
+    this.x -= this.vel;
   }
-
+  
   dibujar() {
-    fill(this.miColor);
-    ellipse(this.x, this.y, this.radio * 2);
-  }
-
-  fueraDePantalla() {
-    return this.x < -this.radio;
-  }
-
-  colisionaCon(personaje) {
-    return (
-      this.x + this.radio > personaje.posX &&
-      this.x - this.radio < personaje.posX + 50 &&
-      this.y + this.radio > personaje.posY &&
-      this.y - this.radio < personaje.posY + 50
-    );
+    image(this.fragmento, this.x, this.y, 20, 5);
   }
 }

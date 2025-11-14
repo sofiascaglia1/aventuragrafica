@@ -1,57 +1,68 @@
-class Personaje {
-  constructor(posX, posY) {
+class Personaje{
+constructor(posX, posY) {
     this.posX = posX;
     this.posY = posY;
-    this.miColor = color(255, 0, 0);
+    this.dipper = dipper
     this.vida = 5;
-
     this.velY = 0;
     this.gravedad = 0.8;
     this.suelo = posY;
+    this.sueloActual = posY;
+    this.vivo= true;
   }
-
-  dibujar() {
-    fill(this.miColor);
-    rect(this.posX, this.posY, 50, 50);
+  dibujar(){
+    if (this.vivo) {
+  image(this.dipper, this.posX, this.posY,80,100);
+  } 
   }
+  actualizarSuelo(obstaculos) {
+  this.sueloActual = this.suelo;
 
-  caer() {
-    this.velY += this.gravedad;
-    this.posY += this.velY;
+  for (let i = 0; i < obstaculos.length; i++) {
+    let obs = obstaculos[i];
 
-    if (this.posY > this.suelo) {
-      this.posY = this.suelo;
-      this.velY = 0;
+    let estaArriba = this.posX + 80 > obs.x && this.posX < obs.x + obs.ancho && this.posY + 100 >= obs.y && this.posY + 100 <= obs.y + 20 &&
+      this.velY >= 0;
+
+    if (estaArriba) {
+      this.sueloActual = obs.y - 100; 
     }
   }
-
-  saltar() {
-    if (this.posY >= this.suelo) {
+}
+  
+  saltar(){
+    if (this.posY >= this.sueloActual) {
       this.velY = -15;
     }
   }
+  
+  caer(){
+    if (!this.vivo) return;
+    this.velY += this.gravedad;
+    this.posY += this.velY;
 
-  detectarColision(obstaculos) {
-    let estaSobreAlgo = false;
-
-    for (let o of obstaculos) {
-      let dentroHorizontal =
-        this.posX + 50 > o.x && this.posX < o.x + o.ancho;
-
-      let tocandoPorArriba =
-        this.posY + 50 >= o.y && this.posY + 50 <= o.y + 15;
-
-      if (dentroHorizontal && tocandoPorArriba && this.velY >= 0) {
-        this.posY = o.y - 50;
-        this.velY = 0;
-        this.suelo = o.y - 50;
-        estaSobreAlgo = true;
-        break;
+    if (this.posY > this.sueloActual) {
+      this.posY = this.sueloActual;
+      this.velY = 0;
+  }
+  } 
+   detectarColision(balas) {
+     if (!this.vivo) return;
+    for (let i = 0; i < balas.length; i++) {
+      let b = balas[i];
+      if (b.x < this.posX + 50 && b.x + 20 > this.posX && b.y < this.posY + 100 && b.y + 5 > this.posY) {
+        this.vida--;
+        b.x = 900;
+        
+         if (this.vida <= 0) {
+          this.morir();
+        }
       }
     }
-
-    if (!estaSobreAlgo) {
-      this.suelo = 400;
-    }
+  }
+  
+  morir(){
+  this.vivo = false;
+    this.velY = 0;
   }
 }
